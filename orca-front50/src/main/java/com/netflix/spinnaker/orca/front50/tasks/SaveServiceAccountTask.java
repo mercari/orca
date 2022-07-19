@@ -64,9 +64,12 @@ public class SaveServiceAccountTask implements RetryableTask {
   @Autowired(required = false)
   private FiatPermissionEvaluator fiatPermissionEvaluator;
 
+  @Value("${tasks.save-service-account.timeout-millis:60000}")
+  private Long timeoutMillis;
+
   @Override
   public long getBackoffPeriod() {
-    return TimeUnit.SECONDS.toMillis(1);
+    return this.timeoutMillis;
   }
 
   @Override
