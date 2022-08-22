@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import retrofit.client.Response;
@@ -64,9 +65,12 @@ public class SaveServiceAccountTask implements RetryableTask {
   @Autowired(required = false)
   private FiatPermissionEvaluator fiatPermissionEvaluator;
 
+  @Value("${tasks.save-service-account.timeout-millis:60000}")
+  private Long timeoutMillis;
+
   @Override
   public long getBackoffPeriod() {
-    return TimeUnit.SECONDS.toMillis(1);
+    return this.timeoutMillis;
   }
 
   @Override
