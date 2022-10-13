@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import retrofit.client.Response;
@@ -51,6 +52,9 @@ public class SavePipelineTask implements RetryableTask {
   private final Front50Service front50Service;
   private final List<PipelineModelMutator> pipelineModelMutators;
   ObjectMapper objectMapper;
+
+  @Value("${tasks.save-pipeline.timeout-millis:30000}")
+  private Long timeoutMillis;
 
   @SuppressWarnings("unchecked")
   @Override
@@ -138,7 +142,7 @@ public class SavePipelineTask implements RetryableTask {
 
   @Override
   public long getTimeout() {
-    return TimeUnit.SECONDS.toMillis(30);
+    return this.timeoutMillis;
   }
 
   private void updateServiceAccount(Map<String, Object> pipeline, String serviceAccount) {

@@ -76,6 +76,9 @@ public class SaveServiceAccountTask implements RetryableTask {
     this.useSharedManagedServiceAccounts = useSharedManagedServiceAccounts;
   }
 
+  @Value("${tasks.save-service-account.timeout-millis:60000}")
+  private Long timeoutMillis;
+
   @Override
   public long getBackoffPeriod() {
     return TimeUnit.SECONDS.toMillis(1);
@@ -83,7 +86,7 @@ public class SaveServiceAccountTask implements RetryableTask {
 
   @Override
   public long getTimeout() {
-    return TimeUnit.SECONDS.toMillis(60);
+    return this.timeoutMillis;
   }
 
   @Nonnull
